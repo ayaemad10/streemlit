@@ -11,6 +11,8 @@
                sticky header, sidebar layout shell
    ============================================================ */
 
+@import url('./theme.css');
+@import url('./typography.css');
 
 /* ─────────────────────────────────────────────────────────────
    1. MODERN CSS RESET  (DeepSeek base — complete and clean)
