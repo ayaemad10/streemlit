@@ -1,0 +1,351 @@
+/* ============================================================
+   animations.css — SpectrumGuard Motion System
+   AI-Powered Spectrum Anomaly Detection | ITC-Egypt 2026
+
+   MERGE NOTES:
+   · DeepSeek: pulse-live with scale + glow ring, glow-critical
+               with border-color transition, shimmer skeleton,
+               data-refresh flash, alert-badge bounce, scan-line
+               as a ::after pseudo-element class (.scan-line)
+   · Original:  live-dot utility class, multi-state dot variants,
+               fade-in-up, slide-in-left, page-enter, radar-sweep,
+               progress-stripe, cursor-blink, stagger children
+   ============================================================ */
+
+/* ─────────────────────────────────────────────────────────────
+   1. KEYFRAME LIBRARY
+   ───────────────────────────────────────────────────────────── */
+
+/* LIVE PULSE — dot scales + radiates a glow ring (DeepSeek) */
+@keyframes pulse-live {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 var(--accent-cyan-glow);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.08);
+    box-shadow: 0 0 0 7px rgba(0, 229, 255, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 229, 255, 0);
+  }
+}
+
+/* CRITICAL GLOW — border color + shadow breathing (DeepSeek) */
+@keyframes glow-critical {
+  0% {
+    box-shadow: 0 0 0 0 var(--critical-red-glow);
+    border-color: var(--critical-red-border);
+  }
+  50% {
+    box-shadow: 0 0 14px 4px var(--critical-red-glow);
+    border-color: var(--critical-red);
+  }
+  100% {
+    box-shadow: 0 0 0 0 var(--critical-red-glow);
+    border-color: var(--critical-red-border);
+  }
+}
+
+/* WARNING PULSE — slower amber breathing (DeepSeek) */
+@keyframes pulse-warning {
+  0%   { box-shadow: 0 0 0 0 var(--warning-yellow-glow); border-color: var(--warning-yellow-border); }
+  50%  { box-shadow: 0 0 10px 3px var(--warning-yellow-glow); border-color: var(--warning-yellow); }
+  100% { box-shadow: 0 0 0 0 var(--warning-yellow-glow); border-color: var(--warning-yellow-border); }
+}
+
+/* SAFE GLOW — gentle green (original) */
+@keyframes glow-safe {
+  0%, 100% { box-shadow: 0 0  5px rgba(16,185,129,0.20); }
+  50%       { box-shadow: 0 0 10px rgba(16,185,129,0.40); }
+}
+
+/* FADE IN UP — component entrance (merged best of both) */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* Alias for original usage */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* SLIDE IN LEFT — panel entrance (original) */
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+/* SHIMMER — skeleton loading (DeepSeek — uses bg vars) */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+/* DATA REFRESH — row flash on value update (DeepSeek) */
+@keyframes data-refresh {
+  0%   { background-color: transparent; }
+  50%  { background-color: var(--accent-cyan-glow); }
+  100% { background-color: transparent; }
+}
+
+/* ALERT BADGE BOUNCE — brief attention grab (DeepSeek) */
+@keyframes alert-badge {
+  0%, 100% { transform: scale(1);    }
+  50%       { transform: scale(1.15); }
+}
+
+/* SCAN LINE — horizontal light sweep across panels (merged) */
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  5%   { opacity: 0.5; }
+  95%  { opacity: 0.5; }
+  100% { transform: translateY(1000%); opacity: 0; }
+}
+
+/* BLINK — step-function text blink for ALERT labels */
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* RADAR SWEEP — rotating arc for map indicator (original) */
+@keyframes radar-sweep {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* PROGRESS STRIPE — moving stripes on loading bars (original) */
+@keyframes progress-stripe {
+  0%   { background-position: 0 0; }
+  100% { background-position: 40px 0; }
+}
+
+/* TERMINAL CURSOR BLINK */
+@keyframes cursor-blink {
+  0%, 100% { border-right-color: var(--accent-cyan); }
+  50%       { border-right-color: transparent; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2. LIVE INDICATOR DOTS
+   ───────────────────────────────────────────────────────────── */
+
+/* Generic dot */
+.live-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  flex-shrink: 0;
+  animation: pulse-live 1.8s ease-in-out infinite;
+}
+
+/* State variants */
+.live-dot--safe {
+  background: var(--safe-green);
+  box-shadow: 0 0 6px var(--safe-green-glow);
+  animation: pulse-live 2.4s ease-in-out infinite;
+}
+
+.live-dot--warning {
+  background: var(--warning-yellow);
+  box-shadow: 0 0 6px var(--warning-yellow-glow);
+  animation: pulse-live 1.4s ease-in-out infinite;
+}
+
+.live-dot--critical {
+  background: var(--critical-red);
+  box-shadow: 0 0 6px var(--critical-red-glow);
+  animation: pulse-live 0.9s ease-in-out infinite;
+}
+
+/* System status text indicators (DeepSeek .system-status-*) */
+.system-status-online {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--safe-green);
+}
+.system-status-online::before {
+  content: '';
+  width: 10px; height: 10px;
+  background: var(--safe-green);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--safe-green-glow);
+  animation: pulse-live 2.4s ease-in-out infinite;
+}
+
+.system-status-degraded {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--warning-yellow);
+}
+.system-status-degraded::before {
+  content: '';
+  width: 10px; height: 10px;
+  background: var(--warning-yellow);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--warning-yellow-glow);
+  animation: pulse-warning 1.4s ease-in-out infinite;
+}
+
+.system-status-offline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--critical-red);
+}
+.system-status-offline::before {
+  content: '';
+  width: 10px; height: 10px;
+  background: var(--critical-red);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--critical-red-glow);
+  animation: glow-critical 1.2s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3. UTILITY ANIMATION CLASSES
+   ───────────────────────────────────────────────────────────── */
+
+/* Entrance animations */
+.fade-in,
+.animate-fade-in     { animation: fadeIn var(--transition-base) ease-out; }
+.animate-fade-up     { opacity: 0; animation: fade-in-up 0.40s ease forwards; }
+.animate-slide-left  { animation: slide-in-left 0.30s ease forwards; }
+.page-enter          { animation: fadeIn 0.50s ease forwards; }
+
+/* Glow state classes (DeepSeek names — used on cards) */
+.pulse-live          { animation: pulse-live   1.8s ease-in-out infinite; }
+.glow-critical       { animation: glow-critical 1.2s ease-in-out infinite; }
+.pulse-warning       { animation: pulse-warning 1.5s ease-in-out infinite; }
+.glow-safe           { animation: glow-safe     3.0s ease-in-out infinite; }
+
+/* Aliases for original naming */
+.animate-glow-critical { animation: glow-critical 1.4s ease-in-out infinite; }
+.animate-glow-warning  { animation: pulse-warning 2.2s ease-in-out infinite; }
+.animate-glow-safe     { animation: glow-safe     3.0s ease-in-out infinite; }
+
+/* Utility */
+.data-refresh        { animation: data-refresh 0.6s ease-out; }
+.alert-badge         { animation: alert-badge  0.3s ease-in-out 2; }
+.animate-blink       { animation: blink 1.0s step-end infinite; }
+.animate-blink-fast  { animation: blink 0.5s step-end infinite; }
+.radar-sweep         { animation: radar-sweep 2.5s linear infinite; transform-origin: center; }
+
+/* Staggered entrance children */
+.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.10s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.20s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* ─────────────────────────────────────────────────────────────
+   4. SCAN LINE OVERLAY
+   DeepSeek uses a class (.scan-line) with ::after pseudo.
+   Original uses a wrapper class (.scan-overlay).
+   Both patterns retained — works with either HTML convention.
+   ───────────────────────────────────────────────────────────── */
+
+.scan-line,
+.scan-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-line::after,
+.scan-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent-cyan) 50%,
+    transparent 100%
+  );
+  animation: scan-line 3s linear infinite;
+  pointer-events: none;
+  opacity: 0.4;
+  z-index: var(--z-raised);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   5. SKELETON LOADING PLACEHOLDER
+   ───────────────────────────────────────────────────────────── */
+
+/* DeepSeek uses bg-tertiary/elevated for the sweep */
+.shimmer,
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-tertiary)  0%,
+    var(--bg-elevated) 50%,
+    var(--bg-tertiary) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton--text  { height: 12px; margin-bottom: var(--space-2); width: 80%; }
+.skeleton--title { height: 20px; margin-bottom: var(--space-3); width: 55%; }
+.skeleton--card  { height: 80px; width: 100%; }
+
+/* ─────────────────────────────────────────────────────────────
+   6. PROGRESS BAR STRIPES
+   ───────────────────────────────────────────────────────────── */
+.progress-bar-striped {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(0,0,0,0.15) 10px,
+    rgba(0,0,0,0.15) 20px
+  );
+  background-size: 40px 40px;
+  animation: progress-stripe 0.8s linear infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   7. TERMINAL CURSOR
+   ───────────────────────────────────────────────────────────── */
+.terminal-cursor {
+  display: inline-block;
+  border-right: 2px solid var(--accent-cyan);
+  padding-right: 2px;
+  animation: cursor-blink 0.8s step-end infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   8. REDUCED MOTION (accessibility)
+   ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .live-dot,
+  .live-dot--safe,
+  .live-dot--warning,
+  .live-dot--critical {
+    animation: none;
+    opacity: 1;
+  }
+}

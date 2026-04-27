@@ -1,0 +1,388 @@
+/* ============================================================
+   responsive.css — SpectrumGuard Responsive Layout
+   AI-Powered Spectrum Anomaly Detection | ITC-Egypt 2026
+
+   MERGE NOTES:
+   · DeepSeek: cleaner breakpoint naming (exact px values),
+               grid utility class collapsing (.grid-4/.grid-3/.grid-2),
+               dataframe horizontal scroll wrapper, touch button sizing,
+               ai-chat height adjustments, high-res 1920px+ tier
+   · Original:  sidebar icon-rail collapse at 1024px,
+               mobile bottom nav bar, print media query,
+               forced-colors accessibility, ultra-wide 1800px tier,
+               Streamlit block-container overrides per breakpoint
+   ============================================================ */
+
+/* ─────────────────────────────────────────────────────────────
+   BREAKPOINT MAP
+   2xl  ≥ 1920px  Large NOC displays / multi-monitor
+   xl   ≥ 1800px  Ultra-wide
+   lg   1366px    Laptops / small desktops  ← DeepSeek added
+   md   1024px    Tablets landscape
+   sm    768px    Tablets portrait
+   xs    640px    Large phones
+   2xs   480px    Phones (emergency)
+   ───────────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────────
+   LARGE LAPTOP  (1024px – 1366px)  ← DeepSeek tier
+   ───────────────────────────────────────────────────────────── */
+@media screen and (max-width: 1366px) {
+  :root {
+    --space-5: 20px;
+    --space-6: 28px;
+  }
+
+  /* 2-col grid from 4-col */
+  .grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  .status-card-value  { font-size: 20px; }
+
+  h1, .h1             { font-size: 24px; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TABLET LANDSCAPE / SMALL LAPTOP  (768px – 1024px)
+   ───────────────────────────────────────────────────────────── */
+@media screen and (max-width: 1024px) {
+
+  :root {
+    --sidebar-width: 56px;   /* icon-rail (original) */
+    --header-height:  52px;
+    --panel-gutter:   16px;
+  }
+
+  /* Container padding (DeepSeek) */
+  .app-container,
+  .main .block-container {
+    padding: var(--space-4);
+  }
+
+  /* Grid collapse (DeepSeek) */
+  .grid-3 { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+  .grid-2 { grid-template-columns: 1fr;           gap: var(--space-4); }
+
+  /* Horizontal scroll for tables (DeepSeek) */
+  .dataframe-wrapper,
+  .stTable-wrapper {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+  }
+  .dataframe,
+  .stTable { min-width: 600px; }
+
+  /* Card padding */
+  .status-card     { padding: var(--space-3); }
+  .status-card-value { font-size: 20px; }
+
+  /* Chat container */
+  .ai-chat-container { height: 320px; }
+
+  /* Typography */
+  h2, .h2 { font-size: 20px; }
+  h3, .h3 { font-size: 16px; }
+
+  /* Sidebar icon-rail (original) */
+  .nav-item__label       { display: none; }
+  .nav-item {
+    justify-content: center;
+    padding: var(--space-4) 0;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .nav-item:hover       { border-left: none; border-bottom-color: var(--border-accent); }
+  .nav-item--active     { border-left: none; border-bottom-color: var(--accent-cyan); }
+
+  /* Hide less-critical table columns */
+  .threat-table .col-site,
+  .threat-table .col-duration { display: none; }
+
+  /* Chart container: reduced header */
+  .chart-container__header { padding: var(--space-2) var(--space-4); }
+
+  /* Streamlit block container */
+  .block-container {
+    padding-top:   var(--space-4) !important;
+    padding-left:  var(--panel-gutter) !important;
+    padding-right: var(--panel-gutter) !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TABLET PORTRAIT  (640px – 768px)
+   ───────────────────────────────────────────────────────────── */
+@media screen and (max-width: 768px) {
+
+  :root {
+    --sidebar-width: 0px;
+    --panel-gutter:  12px;
+  }
+
+  .app-container,
+  .main .block-container {
+    padding: var(--space-3);
+  }
+
+  /* All grids → single column (DeepSeek) */
+  .grid-4,
+  .grid-3,
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  /* Flex utilities stack vertically (DeepSeek) */
+  .flex-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .flex-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  /* Touch-friendly buttons (DeepSeek) */
+  .btn {
+    padding: var(--space-2) var(--space-3);
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Sidebar hidden — replaced by mobile bottom bar (original) */
+  .app-sidebar { display: none; }
+
+  /* Mobile bottom nav */
+  .mobile-nav-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 56px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-subtle);
+    z-index: var(--z-sticky);
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 var(--space-4);
+  }
+
+  /* 2-col status grid */
+  .status-card-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Status values */
+  .status-card-value  { font-size: 18px; }
+
+  /* AI chat */
+  .ai-message { max-width: 95%; }
+
+  /* Table */
+  .threat-table .col-site,
+  .threat-table .col-duration,
+  .threat-table .col-snr { display: none; }
+  .dataframe th,
+  .stTable th,
+  .dataframe td,
+  .stTable td {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  /* Alert compact */
+  .alert-box { padding: var(--space-3); }
+
+  /* Body font */
+  body { font-size: 13px; }
+
+  h1, .h1 { font-size: 22px; }
+
+  /* Terminal panel height */
+  .terminal-panel__body { max-height: 180px; }
+
+  /* Streamlit dataframe: force horizontal scroll */
+  [data-testid="stDataFrame"] { overflow-x: auto !important; }
+
+  /* Toast: full-width */
+  .toast {
+    left: var(--space-3);
+    right: var(--space-3);
+    bottom: 64px;
+    max-width: unset;
+  }
+
+  /* Bottom padding for mobile nav */
+  .app-main { padding-bottom: 70px; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MOBILE  (< 640px)  — DeepSeek XS tier + original 2xs
+   ───────────────────────────────────────────────────────────── */
+@media screen and (max-width: 640px) {
+
+  :root { --panel-gutter: 8px; }
+
+  .app-container,
+  .main .block-container {
+    padding: var(--space-2);
+  }
+
+  /* Full-single-column */
+  .status-card-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Minimal card */
+  .status-card-title { font-size: 10px; }
+  .text-small        { font-size: 10px; }
+
+  /* Alert compact */
+  .alert-box         { padding: var(--space-2) var(--space-3); }
+
+  /* Map container */
+  .map-container     { height: 200px; }
+
+  /* Badge inline */
+  .threat-badge {
+    display: inline-block;
+    margin-bottom: var(--space-1);
+  }
+
+  /* Hide corner decoration on cards */
+  .status-card::before { display: none; }
+
+  /* Most critical table columns only */
+  .threat-table .col-site,
+  .threat-table .col-duration,
+  .threat-table .col-snr,
+  .threat-table .col-freq { display: none; }
+
+  .dataframe th,
+  .stTable th,
+  .dataframe td,
+  .stTable td {
+    padding: var(--space-2);
+    font-size: 11px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   HIGH-RESOLUTION  (≥ 1920px)  — DeepSeek tier
+   ───────────────────────────────────────────────────────────── */
+@media screen and (min-width: 1920px) {
+
+  .app-container,
+  .main .block-container {
+    max-width: 1600px;
+  }
+
+  /* 4-col grid restored */
+  .grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  body              { font-size: 15px; }
+  .status-card-value { font-size: 28px; }
+  .ai-chat-container { height: 500px; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ULTRA-WIDE  (≥ 1800px)  — original NOC display tier
+   ───────────────────────────────────────────────────────────── */
+@media screen and (min-width: 1800px) {
+
+  :root {
+    --sidebar-width:  280px;
+    --panel-gutter:    32px;
+  }
+
+  .status-card-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .status-card-value { font-size: 30px; }
+
+  .terminal-panel__body {
+    max-height: 480px;
+    font-size: 14px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PRINT  (AI-generated report export)
+   DeepSeek hides interactive elements; original swaps dark→white
+   ───────────────────────────────────────────────────────────── */
+@media print {
+
+  /* White background */
+  body {
+    background: white !important;
+    background-image: none !important;
+    color: black !important;
+  }
+
+  /* Hide interactive / decorative elements (DeepSeek) */
+  .btn,
+  .ai-chat-container,
+  .map-container,
+  .app-sidebar,
+  .app-header,
+  .mobile-nav-bar,
+  .scan-line::after,
+  .scan-overlay::after,
+  .live-dot { display: none !important; }
+
+  /* Cards: white print mode */
+  .status-card {
+    border: 1px solid #ccc;
+    background: white;
+    color: black;
+    box-shadow: none;
+    animation: none;
+  }
+
+  /* Threat badges */
+  .threat-badge-critical { background: #fee; color: #c00; }
+  .threat-badge-warning  { background: #fef5e0; color: #a06000; }
+  .threat-badge-safe     { background: #efffef; color: #006020; }
+
+  /* Table borders for print */
+  .dataframe td, .dataframe th,
+  .stTable td,   .stTable th    { border: 1px solid #ccc; }
+
+  /* Kill all animation and glow */
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .page-break-before { page-break-before: always; }
+  .page-break-after  { page-break-after:  always; }
+  .no-print          { display: none !important; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ACCESSIBILITY — High Contrast Mode
+   ───────────────────────────────────────────────────────────── */
+@media (forced-colors: active) {
+  .live-dot              { forced-color-adjust: none; background: Highlight; }
+  .alert-box             { border: 2px solid ButtonText; }
+  .threat-badge          { border: 1px solid ButtonText; }
+  .btn                   { border: 1px solid ButtonText; }
+  .status-card--critical { border: 2px solid ButtonText; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   REDUCED MOTION (also in animations.css — belt & suspenders)
+   ───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .scan-line::after,
+  .scan-overlay::after  { animation: none; }
+  .glow-critical,
+  .pulse-warning,
+  .pulse-live           { animation: none; }
+}

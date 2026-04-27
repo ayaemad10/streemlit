@@ -1,0 +1,633 @@
+/* ============================================================
+   components.css — SpectrumGuard UI Component Library
+   AI-Powered Spectrum Anomaly Detection | ITC-Egypt 2026
+
+   MERGE NOTES:
+   · DeepSeek: status-card-title/value/unit class names (cleaner),
+               btn-primary fills cyan bg (more visible CTA),
+               ai-chat-container with flex layout, threat badge
+               pill shapes, confidence-meter height/transition,
+               dataframe-wrapper scroll, map-container
+   · Original:  status-card state variants (--safe/warning/critical)
+               with top-border + ::before corner decoration,
+               alert-box with inset bar + icon slot, terminal-panel
+               with macOS-style dot header, nav-item system,
+               chart-container shell, toast notification
+   ============================================================ */
+
+/* ─────────────────────────────────────────────────────────────
+   1. STATUS CARDS
+   Frame: DeepSeek base + Original state variants & corner deco
+   ───────────────────────────────────────────────────────────── */
+.status-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-top: 2px solid var(--accent-cyan);   /* accent top-bar */
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Corner cut decoration (original touch) */
+.status-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 10px; height: 10px;
+  border-top: 2px solid var(--accent-cyan);
+  border-right: 2px solid var(--accent-cyan);
+}
+
+.status-card:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-tertiary);
+  box-shadow: var(--shadow-glow-cyan);
+}
+
+/* DeepSeek class names — used directly in HTML/Streamlit markdown */
+.status-card-title {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.status-card-value {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--accent-cyan);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.status-card-unit {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-left: var(--space-1);
+}
+
+/* State variants (original — top border + corner change color) */
+.status-card--safe {
+  border-top-color: var(--safe-green);
+}
+.status-card--safe::before    { border-color: var(--safe-green); }
+.status-card--safe .status-card-value { color: var(--safe-green); text-shadow: var(--glow-safe); }
+
+.status-card--warning {
+  border-top-color: var(--warning-yellow);
+  animation: pulse-warning 2.5s ease-in-out infinite;
+}
+.status-card--warning::before { border-color: var(--warning-yellow); }
+.status-card--warning .status-card-value { color: var(--warning-yellow); text-shadow: var(--glow-warning); }
+
+.status-card--critical {
+  border-top-color: var(--critical-red);
+  animation: glow-critical 1.4s ease-in-out infinite;
+}
+.status-card--critical::before { border-color: var(--critical-red); }
+.status-card--critical .status-card-value { color: var(--critical-red); text-shadow: var(--glow-critical); }
+
+/* Grid layout for card row */
+.status-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2. ALERT BOXES
+   Base from DeepSeek (border-left + bg tint),
+   icon slot + title/body structure from original
+   ───────────────────────────────────────────────────────────── */
+.alert-box {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  border-left-width: 4px;
+  border-left-style: solid;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+  position: relative;
+}
+
+.alert-box__icon    { font-size: 18px; flex-shrink: 0; line-height: 1; margin-top: 1px; }
+.alert-box__content { flex: 1; min-width: 0; }
+
+.alert-box__title {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-1);
+}
+
+.alert-box__body {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+/* DeepSeek class names (also work) */
+.alert-critical,
+.alert-box--critical {
+  border-left-color: var(--critical-red);
+  background: var(--critical-red-bg);
+  animation: glow-critical 1.4s ease-in-out infinite;
+}
+.alert-critical .alert-box__title,
+.alert-box--critical .alert-box__title { color: var(--critical-red); animation: blink 1s step-end infinite; }
+
+.alert-warning,
+.alert-box--warning {
+  border-left-color: var(--warning-yellow);
+  background: var(--warning-yellow-bg);
+  animation: pulse-warning 2.2s ease-in-out infinite;
+}
+.alert-warning .alert-box__title,
+.alert-box--warning .alert-box__title { color: var(--warning-yellow); }
+
+.alert-success,
+.alert-box--safe {
+  border-left-color: var(--safe-green);
+  background: var(--safe-green-bg);
+}
+.alert-success .alert-box__title,
+.alert-box--safe .alert-box__title { color: var(--safe-green); }
+
+.alert-info,
+.alert-box--info {
+  border-left-color: var(--info-blue);
+  background: var(--info-blue-bg);
+}
+.alert-info .alert-box__title,
+.alert-box--info .alert-box__title { color: var(--info-blue); }
+
+/* ─────────────────────────────────────────────────────────────
+   3. BUTTONS  (DeepSeek filled-primary + Original ghost/danger)
+   ───────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Primary: solid cyan fill (DeepSeek — high visibility CTA) */
+.btn-primary,
+.btn--primary {
+  background: var(--accent-cyan);
+  color: var(--bg-deepest);
+  border-color: var(--accent-cyan);
+}
+.btn-primary:hover,
+.btn--primary:hover {
+  background: transparent;
+  color: var(--accent-cyan);
+  box-shadow: var(--glow-live);
+}
+
+/* Secondary: subtle outline */
+.btn-secondary,
+.btn--secondary {
+  border-color: var(--border-default);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+.btn-secondary:hover,
+.btn--secondary:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  background: var(--bg-tertiary);
+}
+
+/* Danger: red outline */
+.btn-danger,
+.btn--danger {
+  border-color: var(--critical-red);
+  color: var(--critical-red);
+  background: transparent;
+}
+.btn-danger:hover,
+.btn--danger:hover {
+  background: var(--critical-red);
+  color: var(--bg-deepest);
+  box-shadow: var(--glow-critical);
+}
+
+/* Ghost */
+.btn--ghost {
+  background: transparent;
+  border-color: var(--border-default);
+  color: var(--text-secondary);
+}
+.btn--ghost:hover {
+  border-color: var(--border-accent);
+  color: var(--text-primary);
+}
+
+/* Sizes */
+.btn--sm { padding: 2px var(--space-3); font-size: 12px; }
+.btn--lg { padding: var(--space-3) var(--space-6); font-size: 14px; }
+
+.btn:disabled,
+.btn[aria-disabled="true"] { opacity: 0.35; pointer-events: none; }
+
+/* ─────────────────────────────────────────────────────────────
+   4. THREAT HISTORY TABLE  (DeepSeek badge pills + Original shell)
+   ───────────────────────────────────────────────────────────── */
+
+/* Horizontal scroll wrapper (DeepSeek) */
+.dataframe-wrapper,
+.stTable-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+}
+
+/* Table base */
+.dataframe,
+.stTable,
+.threat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* Header row */
+.dataframe th,
+.stTable th,
+.threat-table th {
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+/* Data cells */
+.dataframe td,
+.stTable td,
+.threat-table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  vertical-align: middle;
+}
+
+/* Hover row */
+.dataframe tr:hover,
+.stTable tr:hover,
+.threat-table tbody tr:hover {
+  background: var(--bg-tertiary);
+}
+
+/* Last row no border */
+.threat-table tbody tr:last-child td { border-bottom: none; }
+
+/* Column-specific tints */
+.threat-table td.col-freq      { color: var(--accent-blue); font-family: var(--font-mono); }
+.threat-table td.col-confidence { color: var(--accent-cyan); font-family: var(--font-mono); }
+.threat-table td.col-timestamp  { color: var(--text-tertiary); font-size: 12px; font-family: var(--font-mono); }
+
+/* Row state tints */
+.threat-table tr.row--critical td { background: var(--critical-red-bg); }
+.threat-table tr.row--warning  td { background: var(--warning-yellow-bg); }
+.threat-table tr.row--safe     td { background: var(--safe-green-bg); }
+
+/* ── Threat Badge Pills (DeepSeek — rounded pill style) ── */
+.threat-badge {
+  display: inline-block;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: 1px solid;
+}
+
+.threat-badge-critical {
+  background: var(--critical-red-bg);
+  color: var(--critical-red);
+  border-color: var(--critical-red-border);
+  animation: glow-critical 1.6s ease-in-out infinite;
+}
+
+.threat-badge-warning {
+  background: var(--warning-yellow-bg);
+  color: var(--warning-yellow);
+  border-color: var(--warning-yellow-border);
+  animation: pulse-warning 2.2s ease-in-out infinite;
+}
+
+.threat-badge-safe {
+  background: var(--safe-green-bg);
+  color: var(--safe-green);
+  border-color: var(--safe-green-border);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   5. CONFIDENCE METER  (DeepSeek geometry + Original variants)
+   ───────────────────────────────────────────────────────────── */
+.confidence-meter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.confidence-meter__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.confidence-meter__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.confidence-meter__pct {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Track */
+.confidence-meter,
+.confidence-meter__track {
+  background: var(--bg-elevated);
+  border-radius: var(--radius-sm);
+  height: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Fill bar (DeepSeek class names) */
+.confidence-fill,
+.confidence-meter__fill {
+  height: 100%;
+  border-radius: var(--radius-sm);
+  transition: width var(--transition-base);
+}
+
+.confidence-high,
+.confidence-meter__fill--high   {
+  background: linear-gradient(90deg, var(--safe-green), #1fe89c);
+  box-shadow: 0 0 6px var(--safe-green-glow);
+}
+.confidence-medium,
+.confidence-meter__fill--medium {
+  background: linear-gradient(90deg, #cc8800, var(--warning-yellow));
+  box-shadow: 0 0 6px var(--warning-yellow-glow);
+}
+.confidence-low,
+.confidence-meter__fill--low    {
+  background: linear-gradient(90deg, #aa0000, var(--critical-red));
+  box-shadow: 0 0 6px var(--critical-red-glow);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   6. AI AGENT CHAT (DeepSeek layout + Original terminal header)
+   ───────────────────────────────────────────────────────────── */
+.ai-chat-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 420px;
+}
+
+.ai-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.ai-message {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  max-width: 85%;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.ai-message-user {
+  background: var(--bg-elevated);
+  margin-left: auto;
+  border-left: 2px solid var(--accent-cyan);
+  color: var(--text-primary);
+}
+
+.ai-message-bot {
+  border-left: 2px solid var(--accent-lime);
+  color: var(--text-primary);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   7. TERMINAL PANEL  (original macOS-style dots header)
+   ───────────────────────────────────────────────────────────── */
+.terminal-panel {
+  background: var(--bg-deepest);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+
+.terminal-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.terminal-panel__title {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+}
+
+.terminal-panel__dots { display: flex; gap: var(--space-1); }
+.terminal-panel__dot  { width: 6px; height: 6px; border-radius: 50%; background: var(--text-tertiary); }
+.terminal-panel__dot:nth-child(1) { background: var(--critical-red); }
+.terminal-panel__dot:nth-child(2) { background: var(--warning-yellow); }
+.terminal-panel__dot:nth-child(3) { background: var(--safe-green); }
+
+.terminal-panel__body {
+  padding: var(--space-4) var(--space-5);
+  font-size: 13px;
+  color: var(--text-mono);
+  line-height: 1.75;
+  min-height: 100px;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.terminal-panel__body .prompt::before {
+  content: '> ';
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   8. CHART CONTAINER
+   ───────────────────────────────────────────────────────────── */
+.chart-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-container__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+}
+
+.chart-container__title {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.chart-container__body { padding: var(--space-3); }
+
+/* ─────────────────────────────────────────────────────────────
+   9. MAP CONTAINER  (DeepSeek)
+   ───────────────────────────────────────────────────────────── */
+.map-container {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   10. NAV ITEM (sidebar navigation — original)
+   ───────────────────────────────────────────────────────────── */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: color var(--transition-fast),
+              border-color var(--transition-fast),
+              background var(--transition-fast);
+  cursor: pointer;
+}
+.nav-item:hover          { color: var(--text-primary); background: var(--bg-tertiary); border-left-color: var(--border-accent); }
+.nav-item--active        { color: var(--accent-cyan); border-left-color: var(--accent-cyan); background: var(--accent-cyan-trace); }
+
+/* ─────────────────────────────────────────────────────────────
+   11. STATUS ROW (system health rows)
+   ───────────────────────────────────────────────────────────── */
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-2);
+  transition: background var(--transition-fast);
+}
+.status-row:hover         { background: var(--bg-tertiary); }
+.status-row__name         { flex: 1; font-size: 13px; color: var(--text-secondary); }
+.status-row__value        { font-family: var(--font-mono); font-size: 12px; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+
+/* ─────────────────────────────────────────────────────────────
+   12. TOAST / NOTIFICATION
+   ───────────────────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: var(--space-5);
+  right: var(--space-5);
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+  min-width: 260px;
+  max-width: 400px;
+  animation: fadeIn 0.30s ease forwards;
+}
+.toast--critical { border-color: var(--critical-red-border); box-shadow: var(--shadow-glow-red), var(--shadow-lg); }
+.toast--warning  { border-color: var(--warning-yellow-border); box-shadow: var(--shadow-glow-amber), var(--shadow-lg); }

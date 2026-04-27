@@ -1,0 +1,310 @@
+/* ============================================================
+   style.css — SpectrumGuard Global Reset & Base Layout
+   AI-Powered Spectrum Anomaly Detection | ITC-Egypt 2026
+
+   MERGE NOTES:
+   · DeepSeek: cleaner form/button resets, grid utility classes
+               (.grid-2/3/4, .flex-row, .flex-between),
+               professional scrollbar, max-width container
+   · Original:  scanline grid background, Streamlit-specific
+               override selectors, section-header ornament,
+               sticky header, sidebar layout shell
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   1. MODERN CSS RESET  (DeepSeek base — complete and clean)
+   ───────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul, ol        { list-style: none; }
+a             { text-decoration: none; color: inherit; }
+img, picture,
+video, canvas,
+svg           { display: block; max-width: 100%; }
+
+/* Form / input reset */
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+}
+button { cursor: pointer; padding: 0; }
+
+/* ─────────────────────────────────────────────────────────────
+   2. BODY — Dark NOC canvas with scanline grid (original)
+   ───────────────────────────────────────────────────────────── */
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--bg-deepest);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+
+  /* Subtle CSS-only dot-grid (no JS required) */
+  background-image:
+    linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: fixed;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3. APP CONTAINER  (DeepSeek max-width + original shell)
+   ───────────────────────────────────────────────────────────── */
+.app-container,
+.main .block-container {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-6);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   4. GRID & FLEX UTILITIES  (DeepSeek — battle-tested classes)
+   ───────────────────────────────────────────────────────────── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+}
+
+.flex-row     { display: flex; flex-direction: row; align-items: center; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-column  { display: flex; flex-direction: column; }
+.flex-center  { display: flex; align-items: center; justify-content: center; }
+.gap-2        { gap: var(--space-2); }
+.gap-4        { gap: var(--space-4); }
+.gap-6        { gap: var(--space-6); }
+
+/* Sizing helpers */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+/* ─────────────────────────────────────────────────────────────
+   5. SCROLLBAR  (DeepSeek simplified + original color tokens)
+   ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--bg-secondary); border-radius: var(--radius-sm); }
+::-webkit-scrollbar-thumb  { background: var(--border-default); border-radius: var(--radius-sm); }
+::-webkit-scrollbar-thumb:hover { background: var(--border-accent); }
+*                          { scrollbar-width: thin; scrollbar-color: var(--border-default) var(--bg-secondary); }
+
+/* ─────────────────────────────────────────────────────────────
+   6. SELECTION & FOCUS
+   ───────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--accent-cyan-glow);
+  color: var(--accent-cyan);
+}
+:focus-visible {
+  outline: 2px solid var(--accent-cyan);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   7. STREAMLIT GLOBAL OVERRIDES
+   ───────────────────────────────────────────────────────────── */
+
+/* Main app background */
+.stApp,
+[data-testid="stAppViewContainer"] {
+  background-color: var(--bg-deepest) !important;
+  background-image:
+    linear-gradient(var(--grid-line-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px) !important;
+  background-size: 40px 40px !important;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"],
+section[data-testid="stSidebar"] {
+  background-color: var(--bg-secondary) !important;
+  border-right: 1px solid var(--border-subtle) !important;
+}
+[data-testid="stSidebar"] > div:first-child {
+  background-color: var(--bg-secondary) !important;
+}
+
+/* Sidebar navigation */
+[data-testid="stSidebarNav"] a {
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.06em !important;
+  color: var(--text-secondary) !important;
+  border-left: 2px solid transparent;
+  padding-left: var(--space-4) !important;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+[data-testid="stSidebarNav"] a:hover,
+[data-testid="stSidebarNav"] a[aria-selected="true"] {
+  color: var(--accent-cyan) !important;
+  border-left-color: var(--accent-cyan) !important;
+}
+
+/* Top toolbar */
+[data-testid="stToolbar"],
+header[data-testid="stHeader"] {
+  background: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+}
+
+/* Block container spacing */
+.block-container,
+[data-testid="stVerticalBlock"] {
+  padding-top: var(--space-5) !important;
+  padding-bottom: var(--space-8) !important;
+}
+
+/* st.metric */
+[data-testid="stMetric"] {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--space-4) var(--space-5) !important;
+}
+[data-testid="stMetricLabel"] {
+  font-family: var(--font-body) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: var(--text-tertiary) !important;
+}
+[data-testid="stMetricValue"] {
+  font-family: var(--font-mono) !important;
+  color: var(--accent-cyan) !important;
+  text-shadow: var(--glow-live) !important;
+}
+
+/* Divider */
+hr, [data-testid="stDivider"] {
+  border: none !important;
+  border-top: 1px solid var(--border-subtle) !important;
+  margin: var(--space-5) 0 !important;
+}
+
+/* Expander */
+[data-testid="stExpander"] {
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  background: var(--bg-secondary) !important;
+}
+
+/* Selectbox */
+[data-testid="stSelectbox"] > div > div {
+  background: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Text inputs */
+[data-testid="stTextInput"] input,
+[data-testid="stTextArea"] textarea {
+  background: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 13px !important;
+}
+[data-testid="stTextInput"] input:focus,
+[data-testid="stTextArea"] textarea:focus {
+  border-color: var(--accent-cyan) !important;
+  box-shadow: 0 0 0 2px var(--accent-cyan-glow) !important;
+}
+
+/* Streamlit primary button */
+[data-testid="baseButton-primary"],
+.stButton > button {
+  font-family: var(--font-body) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+  background: var(--accent-cyan) !important;
+  border: 1px solid var(--accent-cyan) !important;
+  color: var(--bg-deepest) !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-2) var(--space-5) !important;
+  transition: all var(--transition-fast) !important;
+}
+.stButton > button:hover {
+  background: transparent !important;
+  color: var(--accent-cyan) !important;
+  box-shadow: var(--glow-live) !important;
+}
+
+/* Dataframe */
+[data-testid="stDataFrame"],
+.stDataFrame {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-subtle) !important;
+  border-radius: var(--radius-lg) !important;
+  overflow: hidden !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   8. PAGE SECTION HEADER (original ornamental divider)
+   ───────────────────────────────────────────────────────────── */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+.section-header__line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-default), transparent);
+}
+.section-header__tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.18em;
+  border: 1px solid var(--border-subtle);
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   9. COLOR & BACKGROUND UTILITIES
+   ───────────────────────────────────────────────────────────── */
+.bg-secondary { background: var(--bg-secondary); }
+.bg-tertiary  { background: var(--bg-tertiary); }
+.border       { border: 1px solid var(--border-default); }
+.rounded-lg   { border-radius: var(--radius-lg); }
+.p-4          { padding: var(--space-4); }
+.p-5          { padding: var(--space-5); }
+.mt-4         { margin-top: var(--space-4); }
+.mb-4         { margin-bottom: var(--space-4); }
