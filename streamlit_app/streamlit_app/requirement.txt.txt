@@ -1,0 +1,25 @@
+spectrumguard_dashboard/
+├── app.py
+├── utils/
+│   ├── __init__.py
+│   ├── api.py
+│   └── style_loader.py
+├── pages/
+│   ├── __init__.py
+│   ├── home.py
+│   ├── realtime.py
+│   ├── live_map.py
+│   ├── alerts_log.py
+│   ├── analytics.py
+│   ├── history.py
+│   ├── reports.py
+│   ├── agentchat.py
+│   └── system_monitor.py
+└── assets/
+    └── css/
+        ├── theme.css
+        ├── typography.css
+        ├── style.css
+        ├── components.css
+        ├── animations.css
+        └── responsive.css
